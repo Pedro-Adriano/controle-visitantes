@@ -20,3 +20,16 @@ class VisitanteForm(forms.ModelForm):
                 "invalid": "Adicione uma data válida (DD/MM/AAAA)",
             },
         }
+
+
+class AutorizaVisitanteForm(forms.ModelForm):
+    morador_responsavel = forms.CharField(required=True)
+
+    class Meta:
+        model = Visitante
+        fields = ["morador_responsavel"]
+        error_messages = {
+            "morador_responsavel": {
+                "required": "Porfavor, informe o nome do morador responsável pela entrada do visitante"
+            }
+        }
