@@ -2,7 +2,9 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
 from visitantes.models import Visitante
-from visitantes.forms import VisitanteForm
+from visitantes.forms import VisitanteForm, AutorizaVisitanteForm
+
+from django.utils import timezone
 
 
 def registrar_visitante(request):
@@ -31,6 +33,26 @@ def informacoes_visitante(request, id):
 
     visitante = get_object_or_404(Visitante, id=id)
 
-    context = {"nome_pagina": "Informações visitante", "visitante": visitante}
+    form = AutorizaVisitanteForm()
+
+    if request.method == "POST":
+        form = AutorizaVisitanteForm(request.POST, instance=visitante)
+
+        if form.is_valid():
+            visitante = form.save(commit=False)
+
+            visitante.status = "EM_VISITA"
+
+            visitante.save()
+
+            messages.success(request, "Entrada de visitante autorizada com sucesso")
+
+            return redirect("index")
+
+    context = {
+        "nome_pagina": "Informações visitante",
+        "visitante": visitante,
+        "form": form,
+    }
 
     return render(request, "informacoes_visitante.html", context)
