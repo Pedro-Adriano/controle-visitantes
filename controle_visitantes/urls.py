@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 
-from visitantes.views import index
+from dashboard.views import index
 from visitantes.views import (
     registrar_visitante,
     informacoes_visitante,
